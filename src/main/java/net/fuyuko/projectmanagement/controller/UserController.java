@@ -21,10 +21,12 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(path="/add")
-    public @ResponseBody String addUser(@RequestParam String name, @RequestParam String description) {
+    public @ResponseBody String addUser(@RequestParam String name, @RequestParam(required = false) String description) {
         User user = new User();
         user.setName(name);
-        user.setDescription(description);
+        if(description != null){
+            user.setDescription(description);
+        }
         userService.saveUser(user);
         return "Saved";
     }
