@@ -22,6 +22,9 @@ public class UserController {
 
     @PostMapping(path="/add")
     public @ResponseBody String addUser(@RequestParam String name, @RequestParam(required = false) String description) {
+        if(name == null){
+            return "Name is required";
+        }
         User user = new User();
         user.setName(name);
         if(description != null){
@@ -63,5 +66,11 @@ public class UserController {
     public @ResponseBody String deleteUserById(@PathVariable Integer id) {
         userService.deleteUserById(id);
         return "Deleted";
+    }
+
+    @DeleteMapping(path="/deleteAll")
+    public @ResponseBody String deleteAllUsers() {
+        userService.deleteAllUsers();
+        return "Deleted all users.";
     }
 }
