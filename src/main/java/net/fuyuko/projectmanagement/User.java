@@ -1,4 +1,4 @@
-package net.fuyuko.projectmanagement.entity;
+package net.fuyuko.projectmanagement;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
