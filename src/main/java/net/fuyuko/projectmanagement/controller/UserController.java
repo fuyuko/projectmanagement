@@ -22,6 +22,9 @@ public class UserController {
 
     @PostMapping(path="/add")
     public @ResponseBody String addUser(@RequestParam String name, @RequestParam(required = false) String description) {
+        if(name == null){
+            return "Name is required";
+        }
         User user = new User();
         user.setName(name);
         if(description != null){
