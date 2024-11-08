@@ -40,17 +40,22 @@ public class UserController {
     }
     
     @PutMapping(path="/update")
-    public @ResponseBody String updateUser(@RequestParam Integer id, @RequestParam String name, @RequestParam String description) {
+    public @ResponseBody String updateUser(@RequestParam Integer id, @RequestParam(required = false) String name, @RequestParam(required = false) String description) {
         User user = userService.getUserById(id);
         if (user != null) {
-            user.setName(name);
-            user.setDescription(description);
+            if (name != null) {
+                user.setName(name);
+            }
+            if (description != null) {
+                user.setDescription(description);
+            }
             userService.updateUser(user);
             return "Updated";
         } else {
             return "User not found";
         }
     }
+
 
     @DeleteMapping(path="/{id}")
     public @ResponseBody String deleteUserById(@PathVariable Integer id) {
