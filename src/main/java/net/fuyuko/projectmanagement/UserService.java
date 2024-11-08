@@ -1,10 +1,7 @@
-package net.fuyuko.projectmanagement.service;
+package net.fuyuko.projectmanagement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import net.fuyuko.projectmanagement.entity.User;
-import net.fuyuko.projectmanagement.repository.UserRepository;
 
 @Service
 public class UserService {
@@ -41,6 +38,10 @@ public class UserService {
 
     public void updateUser(User user) {
         userRepository.save(user);
+    }
+
+    public void deleteAllUsers() {
+        userRepository.deleteAll();
     }
 
 }

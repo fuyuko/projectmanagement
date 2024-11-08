@@ -1,7 +1,6 @@
-package net.fuyuko.projectmanagement.repository;
+package net.fuyuko.projectmanagement;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import net.fuyuko.projectmanagement.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 

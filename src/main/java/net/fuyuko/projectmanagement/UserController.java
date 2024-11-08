@@ -1,4 +1,4 @@
-package net.fuyuko.projectmanagement.controller;
+package net.fuyuko.projectmanagement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import net.fuyuko.projectmanagement.entity.User;
-import net.fuyuko.projectmanagement.service.UserService;
-
 @Controller
 @RequestMapping(path="/user")
 public class UserController {
@@ -22,6 +19,9 @@ public class UserController {
 
     @PostMapping(path="/add")
     public @ResponseBody String addUser(@RequestParam String name, @RequestParam(required = false) String description) {
+        if(name == null){
+            return "Name is required";
+        }
         User user = new User();
         user.setName(name);
         if(description != null){
@@ -63,5 +63,11 @@ public class UserController {
     public @ResponseBody String deleteUserById(@PathVariable Integer id) {
         userService.deleteUserById(id);
         return "Deleted";
+    }
+
+    @DeleteMapping(path="/deleteAll")
+    public @ResponseBody String deleteAllUsers() {
+        userService.deleteAllUsers();
+        return "Deleted all users.";
     }
 }
