@@ -1,6 +1,4 @@
-package net.fuyuko.projectmanagement;
-
-import java.util.Optional;
+package net.fuyuko.projectmanagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,39 +11,41 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import net.fuyuko.projectmanagement.entity.User;
+import net.fuyuko.projectmanagement.service.UserService;
+
 @Controller
 @RequestMapping(path="/user")
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @PostMapping(path="/add")
-    public @ResponseBody String addNewUser (@RequestParam String name, @RequestParam String description) {
-        User n = new User();
-        n.setName(name);
-        n.setDescription(description);
-        userRepository.save(n);
+    public @ResponseBody String addUser(@RequestParam String name, @RequestParam String description) {
+        User user = new User();
+        user.setName(name);
+        user.setDescription(description);
+        userService.saveUser(user);
         return "Saved";
-    } 
+    }
 
     @GetMapping(path="/{id}")
-    public @ResponseBody Optional<User> getUserById(@PathVariable Integer id) {
-        return userRepository.findById(id);
+    public @ResponseBody User getUserById(@PathVariable Integer id) {
+        return userService.getUserById(id);
     }
 
     @GetMapping(path="/all")
     public @ResponseBody Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+        return userService.getAllUsers();
     }
     
     @PutMapping(path="/update")
     public @ResponseBody String updateUser(@RequestParam Integer id, @RequestParam String name, @RequestParam String description) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
+        User user = userService.getUserById(id);
+        if (user != null) {
             user.setName(name);
             user.setDescription(description);
-            userRepository.save(user);
+            userService.updateUser(user);
             return "Updated";
         } else {
             return "User not found";
@@ -54,12 +54,7 @@ public class UserController {
 
     @DeleteMapping(path="/{id}")
     public @ResponseBody String deleteUserById(@PathVariable Integer id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()) {
-            userRepository.deleteById(id);
-            return "Deleted";
-        } else {
-            return "User not found";
-        }
+        userService.deleteUserById(id);
+        return "Deleted";
     }
 }
