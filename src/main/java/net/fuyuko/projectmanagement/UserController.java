@@ -40,21 +40,30 @@ public class UserController {
     @PostMapping(path="/add")
     public @ResponseBody String addUser(@RequestParam String name, @RequestParam(required = false) String description) {
         if(name == null){
-            return "Name is required";
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is required");
         }
         User user = new User();
         user.setName(name);
         if(description != null){
             user.setDescription(description);
         }
-        userService.saveUser(user);
-        return "Saved";
+
+       User savedUser = userService.saveUser(user);
+
+        //check if user is saved
+        if (userService.getUserById(savedUser.getId()) == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to add user");
+        }
+
+        return "User added.";
     }
     
     @PutMapping(path="/update")
     public @ResponseBody String updateUser(@RequestParam Integer id, @RequestParam(required = false) String name, @RequestParam(required = false) String description) {
         User user = userService.getUserById(id);
-        if (user != null) {
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }else{
             if (name != null) {
                 user.setName(name);
             }
@@ -62,22 +71,43 @@ public class UserController {
                 user.setDescription(description);
             }
             userService.updateUser(user);
+
+            //check if user is updated
+            if (userService.getUserById(id).getName() != user.getName() || userService.getUserById(id).getDescription() != user.getDescription()) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to update user");
+            }
+
             return "Updated";
-        } else {
-            return "User not found";
-        }
+        } 
     }
 
 
     @DeleteMapping(path="/{id}")
     public @ResponseBody String deleteUserById(@PathVariable Integer id) {
+        // Check if user exists
+        User user = userService.getUserById(id);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
         userService.deleteUserById(id);
-        return "Deleted";
+
+        // Check if user is deleted
+        if (userService.getUserById(id) != null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete user");
+        }
+
+        return "The user is deleted.";
     }
 
     @DeleteMapping(path="/deleteAll")
     public @ResponseBody String deleteAllUsers() {
         userService.deleteAllUsers();
+
+        //chek if all users are deleted
+        if (userService.getAllUsers().size() > 0) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete all users");
+        }
+
         return "Deleted all users.";
     }
 }
