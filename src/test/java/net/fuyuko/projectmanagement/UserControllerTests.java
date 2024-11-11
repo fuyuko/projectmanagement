@@ -91,5 +91,26 @@ public class UserControllerTests {
         verify(userService, times(1)).getAllUsers();
     }
 
+    @Test
+    public void testGetUserById_UserFound() throws Exception {
+        User user = new User(1, "John Doe", "A sample user");
+
+        when(userService.getUserById(1)).thenReturn(user);
+
+        mockMvc.perform(get("/user/1"))
+                .andExpect(status().isOk());
+
+        verify(userService, times(1)).getUserById(1);
+    }
+
+    @Test void testGetUserById_UserNotFound() throws Exception {
+        when(userService.getUserById(1)).thenReturn(null);
+
+        mockMvc.perform(get("/user/1"))
+                .andExpect(status().isNotFound());
+
+        verify(userService, times(1)).getUserById(1);
+    }
+
 
 }
