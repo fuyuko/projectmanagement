@@ -12,8 +12,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,32 +40,39 @@ public class UserControllerTests {
 
     @Test
     public void testAddUser_Success() throws Exception {
-        mockMvc.perform(post("/user/add")
-                .param("name", "John Doe")
-                .param("description", "A sample user"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Saved"));
+        when(userService.saveUser(any(User.class))).thenReturn(new User(1, "John Doe", "A sample user"));
 
-        verify(userService, times(1)).saveUser(any(User.class));       
+        mockMvc.perform(post("/user/add")
+        .param("name", "John Doe")
+        .param("description", "A sample user"))
+        .andExpect(status().isOk())
+        .andExpect(content().string("User added."));    
+
+        verify(userService, times(1)).saveUser(any(User.class));
     }
 
     @Test
     public void testAddUser_missingDescription_Success() throws Exception {
+            
+        when(userService.saveUser(any(User.class))).thenReturn(new User(1, "John Doe", null));
+
         mockMvc.perform(post("/user/add")
                 .param("name", "Jane Doe"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Saved"));
+                .andExpect(content().string("User added."));
 
         verify(userService, times(1)).saveUser(any(User.class));       
     }
+
 
     @Test
     public void testAddUser_MissingName() throws Exception {
         mockMvc.perform(post("/user/add")
                 .param("description", "A sample user"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason("Required parameter 'name' is not present.")); //the reason from requring 'name' parameter 
 
-        verify(userService, times(0)).saveUser(any(User.class));
+        verify(userService, times(0)).saveUser(any());
     }
 
     @Test

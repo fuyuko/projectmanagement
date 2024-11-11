@@ -37,11 +37,9 @@ public class UserController {
     }
     
 
-    @PostMapping(path="/add")
+    @PostMapping(path = "/add")
     public @ResponseBody String addUser(@RequestParam String name, @RequestParam(required = false) String description) {
-        if(name == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is required");
-        }
+
         User user = new User();
         user.setName(name);
         if(description != null){
@@ -51,9 +49,9 @@ public class UserController {
        User savedUser = userService.saveUser(user);
 
         //check if user is saved
-        if (userService.getUserById(savedUser.getId()) == null) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to add user");
-        }
+       if (savedUser.getId() == null) {
+          throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to save user");
+       }
 
         return "User added.";
     }
