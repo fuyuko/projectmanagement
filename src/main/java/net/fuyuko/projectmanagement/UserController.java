@@ -10,12 +10,24 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import java.util.List;
 
 @Controller
 @RequestMapping(path="/user")
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @GetMapping(path="/{id}")
+    public @ResponseBody User getUserById(@PathVariable Integer id) {
+        return userService.getUserById(id);
+    }
+
+    @GetMapping(path="/all")
+    public @ResponseBody List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+    
 
     @PostMapping(path="/add")
     public @ResponseBody String addUser(@RequestParam String name, @RequestParam(required = false) String description) {
@@ -29,16 +41,6 @@ public class UserController {
         }
         userService.saveUser(user);
         return "Saved";
-    }
-
-    @GetMapping(path="/{id}")
-    public @ResponseBody User getUserById(@PathVariable Integer id) {
-        return userService.getUserById(id);
-    }
-
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<User> getAllUsers() {
-        return userService.getAllUsers();
     }
     
     @PutMapping(path="/update")
