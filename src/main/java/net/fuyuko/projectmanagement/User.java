@@ -21,6 +21,15 @@ public class User {
     @Column(name = "description")
     private String description;
 
+    public User() {
+    }
+
+    public User(Integer id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
     public Integer getId() {
         return id;
     }
