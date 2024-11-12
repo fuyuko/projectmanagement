@@ -251,6 +251,61 @@ public class UserControllerTests {
     }
 
     //deleteUserById Tests
+    public void testDeleteUserById_Success() throws Exception {
+        User user = new User(1, "John Doe", "A sample user");
+
+        when(userService.getUserById(1)).thenReturn(user, (User) null);
+
+        mockMvc.perform(delete("/user/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("User deleted."));
+
+        verify(userService, times(2)).getUserById(1);
+        verify(userService, times(1)).deleteUserById(1);
+    }
+
+    public void testDeleteUserById_UserNotFound() throws Exception {
+        when(userService.getUserById(1)).thenReturn(null);
+
+        mockMvc.perform(delete("/user/1"))
+                .andExpect(status().isNotFound())
+                .andExpect(status().reason("User not found"));
+
+        verify(userService, times(1)).getUserById(1);
+        verify(userService, times(0)).deleteUserById(1);
+    }
+
+    public void testDeleteUserById_failed() throws Exception {
+        User user = new User(1, "John Doe", "A sample user");
+
+        when(userService.getUserById(1)).thenReturn(user);
+
+        mockMvc.perform(delete("/user/1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(status().reason("Failed to delete user"));
+
+        verify(userService, times(1)).getUserById(1);
+        verify(userService, times(1)).deleteUserById(1);
+    }
+
+    public void testDeleteUserById_failed2() throws Exception {
+        User user = new User(1, "John Doe", "A sample user");
+        List<User> users = new ArrayList<>(
+            Arrays.asList(new User(1, "John Doe", "A sample user"),
+                new User(2, "Jane Doe", "Another sample user"),
+                new User(3, "Jack Doe", "Yet another sample user")));  
+
+        when(userService.getUserById(1)).thenReturn(user);
+        when(userService.getAllUsers()).thenReturn(users);
+
+        mockMvc.perform(delete("/user/1"))
+        .andExpect(status().isInternalServerError())
+        .andExpect(status().reason("Failed to delete user"));
+
+        verify(userService, times(1)).getUserById(1);
+        verify(userService, times(1)).deleteUserById(1);
+        verify(userService, times(1)).getAllUsers();
+    }
 
     //deleteAllUsers Tests
     public void testDeleteAllUsers_Success() throws Exception {
@@ -280,8 +335,6 @@ public class UserControllerTests {
         verify(userService, times(1)).deleteAllUsers();
         verify(userService, times(1)).getAllUsers();
     }
-
-    
 
 
 }

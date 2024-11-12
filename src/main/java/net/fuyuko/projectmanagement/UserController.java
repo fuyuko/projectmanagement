@@ -81,7 +81,7 @@ public class UserController {
 
 
     @DeleteMapping(path="/{id}")
-    public @ResponseBody String deleteUserById(@PathVariable Integer id) {
+    public @ResponseBody String deleteUserById(@RequestParam Integer id) {
         // Check if user exists
         User user = userService.getUserById(id);
         if (user == null) {
@@ -102,7 +102,7 @@ public class UserController {
         userService.deleteAllUsers();
 
         //chek if all users are deleted
-        if (userService.getAllUsers().size() > 0) {
+        if (userService.getAllUsers().size() != 0) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete all users");
         }
 
