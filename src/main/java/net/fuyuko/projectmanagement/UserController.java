@@ -68,10 +68,10 @@ public class UserController {
             if (description != null) {
                 user.setDescription(description);
             }
-            userService.updateUser(user);
+            User savedUser = userService.saveUser(user);
 
             //check if user is updated
-            if (userService.getUserById(id).getName() != user.getName() || userService.getUserById(id).getDescription() != user.getDescription()) {
+            if (userService.getUserById(id).getName() != savedUser.getName() || userService.getUserById(id).getDescription() != savedUser.getDescription()) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to update user");
             }
 
