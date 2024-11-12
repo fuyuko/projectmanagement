@@ -253,6 +253,33 @@ public class UserControllerTests {
     //deleteUserById Tests
 
     //deleteAllUsers Tests
+    public void testDeleteAllUsers_Success() throws Exception {
+
+        when(userService.getAllUsers()).thenReturn(new ArrayList<>());
+
+        mockMvc.perform(delete("/user/deleteAll"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("All users are deleted."));
+        
+        verify(userService, times(1)).deleteAllUsers();
+        verify(userService, times(1)).getAllUsers();
+    }
+
+    public void testDeleteAllUsers_failed() throws Exception {
+        List<User> users = new ArrayList<>(
+            Arrays.asList(new User(1, "John Doe", "A sample user"),
+                new User(2, "Jane Doe", "Another sample user"),
+                new User(3, "Jack Doe", "Yet another sample user")));
+
+        when(userService.getAllUsers()).thenReturn(users);
+
+        mockMvc.perform(delete("/user/deleteAll"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(status().reason("Failed to delete all users"));
+
+        verify(userService, times(1)).deleteAllUsers();
+        verify(userService, times(1)).getAllUsers();
+    }
 
     
 
