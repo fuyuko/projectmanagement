@@ -82,7 +82,7 @@ public class UserController {
     //TODO: think what to do with the user stories associated with the user to be deleted
 
     @DeleteMapping(path="/{id}")
-    public @ResponseBody String deleteUserById(@RequestParam Integer id) {
+    public @ResponseBody String deleteUserById(@PathVariable Integer id) {
         // Check if user exists
         User user = userService.getUserById(id);
         if (user == null) {

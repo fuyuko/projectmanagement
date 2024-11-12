@@ -97,7 +97,7 @@ public class UserStoryController {
     }
 
     @DeleteMapping(path="/{id}")
-    public @ResponseBody String deleteUserStoryById(@RequestParam Integer id) {
+    public @ResponseBody String deleteUserStoryById(@PathVariable Integer id) {
         UserStory userStory = userStoryService.getUserStoryById(id);
         if (userStory == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User story not found");
