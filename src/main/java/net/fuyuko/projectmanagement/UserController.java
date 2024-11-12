@@ -79,6 +79,7 @@ public class UserController {
         } 
     }
 
+    //TODO: think what to do with the user stories associated with the user to be deleted
 
     @DeleteMapping(path="/{id}")
     public @ResponseBody String deleteUserById(@RequestParam Integer id) {
@@ -96,6 +97,8 @@ public class UserController {
 
         return "The user is deleted.";
     }
+
+    //TODO: do I want to delet all UserStories when deleting all users?
 
     @DeleteMapping(path="/deleteAll")
     public @ResponseBody String deleteAllUsers() {
