@@ -28,6 +28,13 @@ T# Learning Spring Boot
 - https://stackoverflow.com/questions/11880924/how-to-add-custom-method-to-spring-data-jpa
 - https://www.bezkoder.com/spring-jpa-query/
 
+## Lesson 4 Add Web Form for User 
+
+#### Tutorial Resources
+- https://spring.io/guides/gs/handling-form-submission 
+- https://www.baeldung.com/spring-mvc-form-tutorial
+- https://dev.to/arpan_banerjee7/run-react-frontend-and-springboot-backend-on-the-same-port-and-package-them-as-a-single-artifact-14pa 
+- https://developer.okta.com/blog/2022/06/17/simple-crud-react-and-spring-boot
 
 #### API Documentation
 - http://localhost:8080/swagger-ui/index.html
