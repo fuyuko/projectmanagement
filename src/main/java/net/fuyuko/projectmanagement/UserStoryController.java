@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,12 +34,27 @@ public class UserStoryController {
         }
     }
 
-    // TODO: Implement the getAllUserStoriesByUserId method
+    /* 
+
+    @GetMapping(path="/user/{userId}")
+    public @ResponseBody List<UserStory> getAllUserStoriesByUserId(@PathVariable Integer userId) {
+        //check if user exists
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        return userStoryService.getAllUserStoriesByUserId(userId);
+    }
+
+     */
 
     @GetMapping(path="/all")
     public @ResponseBody List<UserStory> getAllUserStories() {
         return userStoryService.getAllUserStories();
     }
+
+   
 
     @PostMapping(path = "/add") 
     public @ResponseBody String addUserStory(@RequestParam Integer userId, @RequestParam String want, @RequestParam String soThat) {
@@ -64,7 +80,7 @@ public class UserStoryController {
         return "User story added.";
     }
 
-    @PostMapping(path = "/update")
+    @PutMapping(path = "/update")
     public @ResponseBody String updateUserStory(@RequestParam Integer id, @RequestParam(required = false) Integer userId, @RequestParam(required = false) String want, @RequestParam(required = false) String soThat) {
         UserStory userStory = userStoryService.getUserStoryById(id);
         if (userStory == null) {

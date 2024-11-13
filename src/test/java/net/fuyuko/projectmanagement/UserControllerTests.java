@@ -65,7 +65,7 @@ public class UserControllerTests {
     //getAllUsers Tests
 
     @Test
-    public void testGetAllUsers() throws Exception {
+    public void testGetAllUsers_Success() throws Exception {
         List<User> users = new ArrayList<>(
             Arrays.asList(new User(1, "John Doe", "A sample user"),
                 new User(2, "Jane Doe", "Another sample user"),

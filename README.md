@@ -16,6 +16,17 @@ T# Learning Spring Boot
 - https://www.bezkoder.com/spring-boot-webmvctest/ (content is hard to read - there is max-width of 640px applied)
 - https://www.baeldung.com/junit-datajpatest-repository (git source - https://github.com/eugenp/tutorials/tree/master/persistence-modules/spring-data-jpa-annotations-2)
 
+## Lesson 3 Add Custom Respository Method
+
+- Added UserStory class
+- UserStory class needs a custom GET method, `getUserStoriesByUserId()`
+
+#### Tutorial Resources
+
+- https://docs.spring.io/spring-data/jpa/reference/repositories/custom-implementations.html
+- https://stackoverflow.com/questions/11880924/how-to-add-custom-method-to-spring-data-jpa
+- https://www.bezkoder.com/spring-jpa-query/
+
 
 #### API Documentation
 - http://localhost:8080/swagger-ui/index.html
