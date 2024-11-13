@@ -34,14 +34,9 @@ public class UserStoryService {
         return userStoryRepository.findById(id).orElse(null);
     }
 
-/*
- 
     public List<UserStory> getAllUserStoriesByUserId(Integer userId) {
         return userStoryRepository.findAllByUserId(userId);
     }
-
-
- */
 
     public List<UserStory> getAllUserStories() {
         return userStoryRepository.findAll();

@@ -20,6 +20,7 @@ T# Learning Spring Boot
 
 - Added UserStory class
 - UserStory class needs a custom GET method, `getUserStoriesByUserId()`
+- Despite the tutorial resources I found (below) instructs me to create a custom interface and implement the interface in the custom class, I was able to implment the GET method simply adding `@Query` & the method signature in UserStoryRepository interface directly. This code was suggested by Copilot. I wonder why this works.
 
 #### Tutorial Resources
 

@@ -63,6 +63,50 @@ public class UserStoryControllerTests {
         verify(userStoryService, times(1)).getUserStoryById(1);
     }
 
+    //getUserStoriesByUserId Tests
+
+    @Test
+    public void testGetAllUserStoriesByUserId_Success() throws Exception {
+        User user = new User(1, "John Doe", "A sample user");
+        List<UserStory> userStories = new ArrayList<>(
+            Arrays.asList(new UserStory(1, 1, "I want to test", "So that I can verify"),
+                new UserStory(2, 1, "I want to test more", "So that I can verify more")));
+
+        when(userService.getUserById(1)).thenReturn(user);
+        when(userStoryService.getAllUserStoriesByUserId(1)).thenReturn(userStories);
+
+        mockMvc.perform(get("/userstory/user/1"))
+                .andExpect(status().isOk());
+
+        verify(userService, times(1)).getUserById(1);
+        verify(userStoryService, times(1)).getAllUserStoriesByUserId(1);
+    }
+
+    @Test
+    public void testGetAllUserStoriesByUserId_UserNotFound() throws Exception {
+        when(userService.getUserById(1)).thenReturn(null);
+
+        mockMvc.perform(get("/userstory/user/1"))
+                .andExpect(status().isNotFound());
+
+        verify(userService, times(1)).getUserById(1);
+        verify(userStoryService, times(0)).getAllUserStoriesByUserId(1);
+    }
+
+    @Test
+    public void testGetAllUserStoriesByUserId_Empty() throws Exception {
+        User user = new User(1, "John Doe", "A sample user");
+
+        when(userService.getUserById(1)).thenReturn(user);
+        when(userStoryService.getAllUserStoriesByUserId(1)).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/userstory/user/1"))
+                .andExpect(status().isOk());
+
+        verify(userService, times(1)).getUserById(1);
+        verify(userStoryService, times(1)).getAllUserStoriesByUserId(1);
+    }
+    
     //getAllUsers Tests
 
     @Test

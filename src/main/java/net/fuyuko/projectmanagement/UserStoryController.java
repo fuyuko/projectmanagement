@@ -34,8 +34,6 @@ public class UserStoryController {
         }
     }
 
-    /* 
-
     @GetMapping(path="/user/{userId}")
     public @ResponseBody List<UserStory> getAllUserStoriesByUserId(@PathVariable Integer userId) {
         //check if user exists
@@ -46,8 +44,6 @@ public class UserStoryController {
 
         return userStoryService.getAllUserStoriesByUserId(userId);
     }
-
-     */
 
     @GetMapping(path="/all")
     public @ResponseBody List<UserStory> getAllUserStories() {

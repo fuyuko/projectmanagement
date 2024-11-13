@@ -29,11 +29,12 @@ public interface UserStoryRepository extends JpaRepository<UserStory, Integer> {
         findAll(Sort sort): Retrieves all entities sorted by the given options.
         findAll(Pageable pageable): Retrieves a Page of entities meeting the paging restriction provided in the Pageable object.
 
- 
-     @Query(value = "SELECT * FROM USER_STORIES WHERE USER_ID = ?1", nativeQuery = true)
+    */
+
+     @Query(value = "SELECT * FROM userstory WHERE user_id = ?1", nativeQuery = true)
         List<UserStory> findAllByUserId(Integer userId);
 
-    */
+
 
 
 }
