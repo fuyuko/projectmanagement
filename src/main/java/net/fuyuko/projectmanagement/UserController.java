@@ -21,6 +21,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserStoryService userStoryService;
+
     @GetMapping(path="/{id}")
     public @ResponseBody User getUserById(@PathVariable Integer id) {
         User user = userService.getUserById(id);
@@ -79,7 +82,7 @@ public class UserController {
         } 
     }
 
-    //TODO: think what to do with the user stories associated with the user to be deleted
+   
 
     @DeleteMapping(path="/{id}")
     public @ResponseBody String deleteUserById(@PathVariable Integer id) {
@@ -88,6 +91,12 @@ public class UserController {
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
+        
+        // Check if user story exist for the user
+        if(userStoryService.getAllUserStoriesByUserId(id).size() != 0){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Need to delete user stories associated with the user first.");
+        }
+
         userService.deleteUserById(id);
 
         // Check if user is deleted
@@ -98,10 +107,13 @@ public class UserController {
         return "The user is deleted.";
     }
 
-    //TODO: do I want to delet all UserStories when deleting all users?
-
     @DeleteMapping(path="/deleteAll")
     public @ResponseBody String deleteAllUsers() {
+        //check if there are user stories
+        if(userStoryService.getAllUserStories().size() != 0){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Need to delete all user stories first.");
+        }
+
         userService.deleteAllUsers();
 
         //chek if all users are deleted
@@ -109,6 +121,6 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete all users");
         }
 
-        return "Deleted all users.";
+        return "All users are deleted.";
     }
 }

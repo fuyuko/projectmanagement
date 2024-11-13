@@ -36,6 +36,9 @@ public class UserControllerTests {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private UserStoryService userStoryService;
+
     @InjectMocks
     private UserController userController;
 
@@ -251,6 +254,7 @@ public class UserControllerTests {
     }
 
     //deleteUserById Tests
+    @Test
     public void testDeleteUserById_Success() throws Exception {
         User user = new User(1, "John Doe", "A sample user");
 
@@ -258,12 +262,13 @@ public class UserControllerTests {
 
         mockMvc.perform(delete("/user/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("User deleted."));
+                .andExpect(content().string("The user is deleted."));
 
         verify(userService, times(2)).getUserById(1);
         verify(userService, times(1)).deleteUserById(1);
     }
 
+    @Test
     public void testDeleteUserById_UserNotFound() throws Exception {
         when(userService.getUserById(1)).thenReturn(null);
 
@@ -275,66 +280,93 @@ public class UserControllerTests {
         verify(userService, times(0)).deleteUserById(1);
     }
 
+    @Test
+    public void testDeleteUserById_UserStoryExist() throws Exception {
+        User user = new User(1, "John Doe", "A sample user");
+        List<UserStory> userStories = new ArrayList<>(
+            Arrays.asList(new UserStory(1, 1, "I want to do something", "So that I can achieve something"),
+                new UserStory(2, 1, "I want to do something else", "So that I can achieve something else")));
+
+        when(userService.getUserById(1)).thenReturn(user);
+        when(userStoryService.getAllUserStoriesByUserId(1)).thenReturn(userStories);
+
+        mockMvc.perform(delete("/user/1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(status().reason("Need to delete user stories associated with the user first."));
+
+        verify(userService, times(1)).getUserById(1);
+        verify(userStoryService, times(1)).getAllUserStoriesByUserId(1);
+        verify(userService, times(0)).deleteUserById(1);
+    }
+
+    @Test
     public void testDeleteUserById_failed() throws Exception {
         User user = new User(1, "John Doe", "A sample user");
 
+
         when(userService.getUserById(1)).thenReturn(user);
+        when(userStoryService.getAllUserStoriesByUserId(1)).thenReturn(new ArrayList<>());
 
         mockMvc.perform(delete("/user/1"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(status().reason("Failed to delete user"));
 
-        verify(userService, times(1)).getUserById(1);
+        verify(userService, times(2)).getUserById(1);
+        verify(userStoryService, times(1)).getAllUserStoriesByUserId(1);    
         verify(userService, times(1)).deleteUserById(1);
     }
-
-    public void testDeleteUserById_failed2() throws Exception {
-        User user = new User(1, "John Doe", "A sample user");
-        List<User> users = new ArrayList<>(
-            Arrays.asList(new User(1, "John Doe", "A sample user"),
-                new User(2, "Jane Doe", "Another sample user"),
-                new User(3, "Jack Doe", "Yet another sample user")));  
-
-        when(userService.getUserById(1)).thenReturn(user);
-        when(userService.getAllUsers()).thenReturn(users);
-
-        mockMvc.perform(delete("/user/1"))
-        .andExpect(status().isInternalServerError())
-        .andExpect(status().reason("Failed to delete user"));
-
-        verify(userService, times(1)).getUserById(1);
-        verify(userService, times(1)).deleteUserById(1);
-        verify(userService, times(1)).getAllUsers();
-    }
-
+ 
     //deleteAllUsers Tests
+
+    @Test
     public void testDeleteAllUsers_Success() throws Exception {
 
+        when(userStoryService.getAllUserStories()).thenReturn(new ArrayList<>());
         when(userService.getAllUsers()).thenReturn(new ArrayList<>());
+        
 
         mockMvc.perform(delete("/user/deleteAll"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("All users are deleted."));
         
+        verify(userStoryService, times(1)).getAllUserStories();
         verify(userService, times(1)).deleteAllUsers();
         verify(userService, times(1)).getAllUsers();
     }
 
+    @Test
+    public void testDeleteAllUsers_UserStoryExist() throws Exception {
+        List<UserStory> userStories = new ArrayList<>(
+            Arrays.asList(new UserStory(1, 1, "I want to do something", "So that I can achieve something"),
+                new UserStory(2, 1, "I want to do something else", "So that I can achieve something else")));
+        when(userStoryService.getAllUserStories()).thenReturn(userStories);
+
+        mockMvc.perform(delete("/user/deleteAll"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(status().reason("Need to delete all user stories first."));
+
+        verify(userStoryService, times(1)).getAllUserStories();
+        verify(userService, times(0)).deleteAllUsers();
+        verify(userService, times(0)).getAllUsers();
+    }
+
+    @Test
     public void testDeleteAllUsers_failed() throws Exception {
         List<User> users = new ArrayList<>(
             Arrays.asList(new User(1, "John Doe", "A sample user"),
                 new User(2, "Jane Doe", "Another sample user"),
                 new User(3, "Jack Doe", "Yet another sample user")));
 
+        when(userStoryService.getAllUserStories()).thenReturn(new ArrayList<>());
         when(userService.getAllUsers()).thenReturn(users);
 
         mockMvc.perform(delete("/user/deleteAll"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(status().reason("Failed to delete all users"));
 
+        verify(userStoryService, times(1)).getAllUserStories();
         verify(userService, times(1)).deleteAllUsers();
         verify(userService, times(1)).getAllUsers();
     }
-
 
 }
