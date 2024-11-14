@@ -32,6 +32,13 @@ T# Learning Spring Boot
 
 - Followed https://dev.to/arpan_banerjee7/run-react-frontend-and-springboot-backend-on-the-same-port-and-package-them-as-a-single-artifact-14pa to install React in `src/main/frontend`
 
+### Cheatsheet
+
+With the following, React Frontend is being served with Spring Boot (no need to serve separately)
+
+-- copy frontend to code to target: `cd src/main/frontend` then `mvn clean install`
+-- run spring-boot = `mvn spring-boot:run`
+
 #### Tutorial Resources
 - https://spring.io/guides/gs/handling-form-submission 
 - https://www.baeldung.com/spring-mvc-form-tutorial
