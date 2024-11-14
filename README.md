@@ -1,4 +1,4 @@
-T# Learning Spring Boot 
+# Learning Spring Boot and React Using GitHub Copilot
 
 ## Lesson 1 CRUD Operations for User Class
 
@@ -36,8 +36,8 @@ T# Learning Spring Boot
 
 With the following, React Frontend is being served with Spring Boot (no need to serve separately)
 
--- copy frontend to code to target: `cd src/main/frontend` then `mvn clean install`
--- run spring-boot = `mvn spring-boot:run`
+- copy frontend to code to target: `cd src/main/frontend` then `mvn clean install`
+- run spring-boot = `mvn spring-boot:run`
 
 #### Tutorial Resources
 - https://spring.io/guides/gs/handling-form-submission 
