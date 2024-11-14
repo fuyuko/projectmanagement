@@ -30,6 +30,8 @@ T# Learning Spring Boot
 
 ## Lesson 4 Add Web Form for User 
 
+- Followed https://dev.to/arpan_banerjee7/run-react-frontend-and-springboot-backend-on-the-same-port-and-package-them-as-a-single-artifact-14pa to install React in `src/main/frontend`
+
 #### Tutorial Resources
 - https://spring.io/guides/gs/handling-form-submission 
 - https://www.baeldung.com/spring-mvc-form-tutorial
